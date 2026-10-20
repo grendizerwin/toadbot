@@ -4,8 +4,6 @@ A fan-made toolkit for **TOAD** (The Toad Pepe, a Solana memecoin, https://theto
 
 Not affiliated with or endorsed by the TOAD project. The official account is [@thetoadmeme_](https://x.com/thetoadmeme_).
 
-**Credit:** the TOAD character, art, video and brand materials belong to the TOAD creators and are redistributed here with permission. The fonts are SIL OFL-1.1 (see `kit/assets/fonts/LICENSE`). The creator kit's own terms still apply: these files don't come with a commercial-use license.
-
 ## Install
 
 New bots download the kit on first run into `TOAD_KIT=/home/box/shared/toad-kit`:
