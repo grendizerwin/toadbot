@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+# generated output
+out/
+output/
+outputs/
+media/
+toad-media/
+toad-state/
+*.jsonl
