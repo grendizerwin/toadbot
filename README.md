@@ -31,7 +31,6 @@ kit/
     paper-pulse-reference.png
   raw/                capture of thetoadmeme.com pages and CSS (reference only)
 docs/
-  REPORT.md           how the skills, paths and tools fit together
   skills/             template skills, one .md per skill
   references/         deeper playbooks (voice, hooks, visual bible, scoring, queries)
 requirements.txt      Pillow
