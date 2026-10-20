@@ -7,28 +7,28 @@ description: Use when the owner wants an original or quote-tweet X post for $TOA
 
 Write original posts and quote-tweets for $TOAD that the owner publishes on **the owner's X account**. Research live activity first. Prefer quote-tweeting official media or editing the official plush photos. Never generate a generic internet frog and call it TOAD.
 
-The owner speaks as **a pond member, not the project**. Soft community voice: relatable, a little chaotic, warm, never mean, lowercase-friendly, short. Everyday moments (mondays, one more meeting, tomorrow problems, weekends) beat lore and market talk. No hard shill, no invented catalysts, no price talk.
+The owner runs a **TOAD fan account**: a pond member, never the team, the project, or an official account. Never write anything that implies the owner is the team or official (no "we're launching", "our roadmap", "official update", "team here"). Soft community voice: relatable, a little chaotic, warm, never mean, lowercase-friendly, short. Everyday moments (mondays, one more meeting, tomorrow problems, weekends) beat lore and market talk. No hard shill, no invented catalysts, no price talk.
 
 Replies under other people's posts belong to `toad-template-growth-replies` (crypto/adjacent threads) and `toad-template-crossover-replies` (non-crypto image remixes). Targets, queries and don't-engage rules live in `toad-targets`.
 
 ## Setup this skill expects (done by `toad-getting-started`)
 
-- Brand kit: `TOAD_KIT=/home/box/shared/toad-kit` (downloaded from REPO_URL). Read it, never edit it.
+- Repo clone: `TOAD_KIT=/home/box/shared/toad-kit` (a `git clone` of https://github.com/grendizerwin/toadbot). Brand kit under `$TOAD_KIT/kit/`, scripts under `$TOAD_KIT/bin/`. Read it, never edit it.
   - `$TOAD_KIT/kit/BRAND.md` (source of truth), `$TOAD_KIT/kit/prompt-kit.md` (Character lock, Face check, templates, voice cheat sheet)
-  - `$TOAD_KIT/kit/assets/characters/` (character references), `$TOAD_KIT/kit/assets/fonts/`, `$TOAD_KIT/kit/assets/paper-pulse-reference.png`, `$TOAD_KIT/kit/assets/video/`
+  - `$TOAD_KIT/kit/assets/characters/` (character references), `$TOAD_KIT/kit/assets/fonts/`, `$TOAD_KIT/kit/assets/paper-pulse-reference.png`, `$TOAD_KIT/kit/assets/creator-kit/`, `$TOAD_KIT/kit/assets/brand-boards/`, `$TOAD_KIT/kit/assets/video/` (the official TOAD sample video and its prompt). Fonts ship with their OFL license.
   - Scripts: `$TOAD_KIT/bin/xai_image.py` (image gen/edit), `$TOAD_KIT/bin/compose.py` (Paper Pulse card), `$TOAD_KIT/bin/toad_ledger.py` (publish ledger)
-- Config: `/home/box/shared/toad-config.json` with `owner_handle`, `owner_user_id`, `timezone`, `posting_hours`, `default_slots`, optional `target_list_id`.
-- Drafts and queue: `/home/box/shared/toad-drafts/<YYYY-MM-DD>/` and `/home/box/shared/toad-drafts/queue.json`.
-- Ledger: `/home/box/shared/toad-drafts/ledger.jsonl` (always pass `--ledger` explicitly).
-- Media working folder: `/home/box/shared/toad-media/`. Upload folder: `/workspace/toad-upload/` (the box browser's X upload dialog only picks files from `/workspace`).
+- State dir: `TOAD_STATE_DIR` (default `/home/box/shared/toad-state`): `toad-config.json` (`owner_handle`, `owner_user_id`, `timezone`, `posting_hours`, `evening_slot`, optional `target_list_id`, `crossover_pages`, `slot_offset_min`), `queue.json` (drafts awaiting approval and approved later slots), and the ledger `toad-ledger.jsonl`, which `toad_ledger.py` reads and writes there by default (don't pass a `--ledger` path).
+- Media dir: `TOAD_MEDIA_DIR` (default `/home/box/shared/toad-media`): generated images and draft finals in `/home/box/shared/toad-media/<YYYY-MM-DD>/`. `xai_image.py` writes there by default. Upload folder: `/workspace/toad-upload/` (the box browser's X upload dialog only picks files from `/workspace`).
 - `XAI_API_KEY` in the environment (the owner's own key; never print it).
+
+Deeper playbooks (optional reading, same rules in more detail): `$TOAD_KIT/docs/references/post-generator/` (caption-voice, uniqueness, viral-hooks, visual-bible, search-queries, toad-lore). This skill wins if they disagree.
 
 If something is missing, say so once at the end of the package and continue with what exists. Never invent file contents.
 
 ## Tools
 
 - Public X reads: namespace `x` (`search_posts_all`, `get_users_by_username`, `get_users_posts`, `get_posts_by_id`, `get_posts_by_ids`, `get_posts_quoted_posts`, `get_users_mentions`, `get_trends_by_woeid`). The owner's X plugin can also read (`get_users_me`, mentions). **No connector can post.** Publishing goes through the box browser (protocol below).
-- Images: `python3 $TOAD_KIT/bin/xai_image.py --prompt "..." --ref <path> [--ref ... up to 5] --aspect-ratio 1:1 --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD-name>.jpg`. With `--ref` it uses edit mode; name refs in the prompt as `<IMAGE_0>`, `<IMAGE_1>`... Do **not** use the built-in GenerateImage for X images (its files land where the browser can't upload them). Each call bills the owner's own xAI / X subscription: `--n 1`, generate only when the post truly needs an image, no batch-and-pick. Read every result before using it.
+- Images: `python3 $TOAD_KIT/bin/xai_image.py --prompt "..." --ref <path> [--ref ... up to 5] --aspect-ratio 1:1 --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD>/<name>.jpg`. With `--ref` it uses edit mode; name refs in the prompt as `<IMAGE_0>`, `<IMAGE_1>`... Do **not** use the built-in GenerateImage for X images (its files land where the browser can't upload them). Each call bills the owner's own xAI / X subscription: `--n 1`, generate only when the post truly needs an image, no batch-and-pick. Read every result before using it.
 - Captions and layouts on images: Pillow with the brand fonts (Pillow loads the `.woff2` files directly). Paper Pulse card: `python3 $TOAD_KIT/bin/compose.py <photo> <out.jpg> "<HEADLINE>" "<caveat note>" "<LEFT LABEL>" "<RIGHT LABEL>"`. Video captions: ffmpeg or Pillow frames. Never burn generated text into an image.
 - Video: built-in GenerateVideo, 9:16, under 15 s, character references attached.
 - View media: curl the post's media `url` (or a video's `preview_image_url`) to the box and Read it. Video can't be watched; say so and judge from the preview frame.
@@ -60,7 +60,7 @@ If something is missing, say so once at the end of the package and continue with
 1. `$TOAD_KIT/kit/BRAND.md` sections 3 (taglines), 4 (lore, facts only), 5 (voice), 9–12 (character, guidelines, brand board, do's and don'ts).
 2. `$TOAD_KIT/kit/prompt-kit.md`: Character lock, Face check, templates, voice cheat sheet.
 3. `toad-targets` for queries and don't-engage rules.
-4. Continuity: the owner's latest 8 posts (`get_users_posts <owner_user_id>`), `@thetoadmeme_` latest 8, the ledger (`python3 $TOAD_KIT/bin/toad_ledger.py --ledger /home/box/shared/toad-drafts/ledger.jsonl recent --hours 72`), and recent drafts in `/home/box/shared/toad-drafts/`.
+4. Continuity: the owner's latest 8 posts (`get_users_posts <owner_user_id>`), `@thetoadmeme_` latest 8, the ledger (`python3 $TOAD_KIT/bin/toad_ledger.py recent --hours 72`), the queue (`/home/box/shared/toad-state/queue.json`), and recent draft media in `/home/box/shared/toad-media/`.
 
 ## 1. Research (every run)
 
@@ -141,7 +141,7 @@ Workflow:
 4. **Max 2 generations per image:** first try, then one retry with the face reference first and "restore the exact face and outfit from the reference." If both fail, stop generating: composite `hero-cutout-toad-bust-transparent.png` (or the front reference cut off its backdrop) into the scene with Pillow, or make a Paper Pulse card with `compose.py`. Never ship a failed face.
 5. Captions afterward with Pillow and the brand fonts in `$TOAD_KIT/kit/assets/fonts/`: Anton (display), DM Sans (body), IBM Plex Mono (labels), Caveat (handwritten). Cream #F9F1D7 canvas, forest #144137 text, yellow #F6BE2D brush marks, red #E02B2F only as a tiny accent, green #35D391 / lime #B5DB3A backdrops. One headline, short caption, safe areas, lots of breathing room.
 
-**Video:** 9:16 vertical, under 15 s, soft light, simple backgrounds, gentle cuts, modeled on `$TOAD_KIT/kit/assets/video/toad-one-more-meeting-video-prompt.txt`. GenerateVideo with `reference_image_paths` = front + face (+ rear if he turns). The head is one rigid piece; eyes and mouth never move; only shoulders and arms breathe; end on the fixed smile. No text in the generation; captions added in edit (ffmpeg drawtext with the brand fonts, or Pillow overlays). Audio only with rights. Propose a video idea first and generate only after the owner oks the idea.
+**Video:** 9:16 vertical, under 15 s, soft light, simple backgrounds, gentle cuts, modeled on `$TOAD_KIT/kit/assets/video/toad-one-more-meeting-video-prompt.txt` (watch-style reference: `toad-one-more-meeting.mp4` in the same folder; it's 16:9, ours are 9:16). GenerateVideo with `reference_image_paths` = front + face (+ rear if he turns). The head is one rigid piece; eyes and mouth never move; only shoulders and arms breathe; end on the fixed smile. No text in the generation; captions added in edit (ffmpeg drawtext with the brand fonts, or Pillow overlays). Audio only with rights. Propose a video idea first and generate only after the owner oks the idea.
 
 Show every image in the same response.
 
@@ -157,7 +157,7 @@ Show every image in the same response.
 ## Post Options
 ### Option 1 (preferred)
 [ready text inside a text fence]
-[QT target or media path outside the fence; suggested slot in the owner's time zone]
+[QT target or media path outside the fence; suggested slot in the owner's time zone, shifted by `slot_offset_min` from toad-config.json (e.g. 19:00 + 17 → 19:17)]
 [If image/video: reference files attached + the prompt + Face check verdict]
 [Why this is not generic]
 
@@ -169,13 +169,13 @@ Show every image in the same response.
 - which patterns and scenes to avoid next run
 ```
 
-Save finals to `/home/box/shared/toad-drafts/<YYYY-MM-DD>/` and add each as a `pending_approval` item to the queue (schema in `toad-getting-started`).
+Save finals to `/home/box/shared/toad-media/<YYYY-MM-DD>/` and add each as a `pending_approval` item to the queue (schema in `toad-getting-started`).
 
 ## 6. Safety
 
 - Soft-shill only. Never mean; never dunk on other coins, holders, or people.
 - No price predictions, "pump", moon, targets, financial advice, promises, fake partnerships, raids-as-fact. If the owner asks for a price or market-cap figure in an image, make it, also offer a version without the number, and say in one line that a price plus "soon" reads as a prediction.
-- Never post the contract address unprompted. Never imply an official announcement; the owner is a pond member, not the project. Never claim Matt Furie copied El Sapo or that $TOAD owns the character.
+- Never post the contract address unprompted. Never imply an official announcement or that the owner is the team or official; the owner is a fan account, a pond member. Never claim Matt Furie copied El Sapo or that $TOAD owns the character.
 - Never mention anyone's wallet or holdings.
 - Don't engage trolls, scams, impersonators, or copycat contracts (`toad-targets`). No bulk tagging. No duplicate posts.
 - If FUD is the live story, stay neutral or pivot to a real visual gag. Don't argue bags.
@@ -196,7 +196,7 @@ The X connectors can't post. An approved draft goes out **once**, through the bo
 8. **Pre-click check** (screenshot): exact text, right media, right reply/quote target, and the Post/Reply button visible, enabled, and **not covered** by any popup.
 9. Set the queue item to `posting`, then **click Post/Reply exactly once**. Never click again, even if the composer stays open; late posts happen and cause duplicates.
 10. **Verify via public X reads** at about 20 s, 60 s, 120 s and 300 s after the click: look for a new owner post newer than the baseline with matching text (for replies, matching `conversation_id` / `in_reply_to_user_id`). Stop at the first match.
-11. **Found:** `python3 $TOAD_KIT/bin/toad_ledger.py --ledger /home/box/shared/toad-drafts/ledger.jsonl append --id <id> --format <orig-img|orig-card|orig-text|video|remix-reply|text-reply> --text "<text>" --target <@handle or empty> --target-followers <n> --slot <HH:MM> --draft "<label>"`, mark the item `posted` with the id, and report the URL to the owner.
+11. **Found:** `python3 $TOAD_KIT/bin/toad_ledger.py append --id <id> --format <orig-img|orig-card|orig-text|video|remix-reply|text-reply> --text "<text>" --target <@handle or empty> --target-followers <n> --slot <HH:MM> --draft "<label>"`, mark the item `posted` with the id, and report the URL to the owner.
 12. **Not found after 300 s:** mark the item `unverified`, tell the owner with a screenshot, and **never retry in this run**. The owner decides. A later run that finds an item in `posting` or `unverified` must re-verify by reads only and never click again.
 
-**Later slots:** X's composer Schedule button was unreliable in testing (the composer showed the scheduled time but X's scheduled-posts list stayed empty). Don't use it. Put approved later-slot drafts in `/home/box/shared/toad-drafts/queue.json` with `due_at`; the `toad-publish-queue` routine posts them when due, after a fresh read check, under this protocol.
+**Later slots:** X's composer Schedule button was unreliable in testing (the composer showed the scheduled time but X's scheduled-posts list stayed empty). Don't use it. Put approved later-slot drafts in `/home/box/shared/toad-state/queue.json` with `due_at`; the `toad-publish-queue` routine posts them when due, after a fresh read check, under this protocol.

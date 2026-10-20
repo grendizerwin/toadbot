@@ -7,7 +7,7 @@ description: Use when a TOAD drafts, growth-reply or crossover run needs the wat
 
 Shared reference for `toad-template-post-generator`, `toad-template-growth-replies`, `toad-template-crossover-replies` and the `toad-daily-drafts` routine. Everything here is a **starting map, not a hall of fame**: re-check every account live, and only name an account in a pack with a this-window reason (post URL, views, a question they asked).
 
-Owner values come from `/home/box/shared/toad-config.json` (`owner_handle`, `owner_user_id`, optional `target_list_id`).
+Owner values come from `/home/box/shared/toad-state/toad-config.json` (`owner_handle`, `owner_user_id`, optional `target_list_id`).
 
 ## Official TOAD (from thetoadmeme.com, mirrored in `$TOAD_KIT/kit/BRAND.md` §1–2)
 
@@ -21,7 +21,7 @@ Owner values come from `/home/box/shared/toad-config.json` (`owner_handle`, `own
 ## Crypto watch list (public accounts)
 
 - **@thetoadmeme_** — source of truth for media. Weak reply destination (its community is already there); best as QT fuel, or reply under *people* who quote it (`get_posts_quoted_posts`). It also posts image replies under big accounts: read its `referenced_tweets` and don't stack under the same parents.
-- **Public supporters** — people who have posted about TOAD themselves. Good continuity / reply targets when they're live and on a TOAD-fit topic; find them live (search `$TOAD` / `El Toad Pepe`), don't keep a fixed roster. **Never mention anyone's wallet or holdings.** Don't @ them cold with a ticker dump; skip finance-flavored posts.
+- **@mdudas** — public supporter who has posted about TOAD; a continuity account to watch, and a reply target only when he's live on a TOAD-fit topic. **Never mention his (or anyone's) wallet or holdings.** Don't @ him cold with a ticker dump; skip his finance-flavored posts.
 - **Big CT accounts (context, rarely targets):** @blknoiz06, @gainzy222. Text replies under big CT accounts get buried; use them for mood, not as default reply targets.
 - **Launchpads / chain pages (context only, never reply targets):** @Pumpfun and other launchpad, factory and chain accounts (@solana, @BNBCHAIN).
 - **Owner's own orbit:** mentions and replies to the owner (`get_users_mentions <owner_user_id>`) are the reply-back pool.
@@ -29,7 +29,7 @@ Owner values come from `/home/box/shared/toad-config.json` (`owner_handle`, `own
 
 ## Crossover sources (big non-crypto pages for remixes)
 
-Pages that have produced remixable stills (re-check followers with `user.fields=public_metrics`; target 1M+ followers, under ~30 replies, under ~3 h old):
+Master list of pages that have produced remixable stills (re-check followers with `user.fields=public_metrics`; target 1M+ followers, under ~30 replies, under ~3 h old). **Each bot uses only its own `crossover_pages` subset** from `toad-config.json` (a random ~60% of this list chosen once at setup by `toad-getting-started`); build the crossover query from that subset:
 
 @NoContextHumans · @HumansNoContext · @nocontextfooty · @PopBase · @PopCrave · @Dexerto · @InternetH0F · @BleacherReport · @DiscussingFilm · @memechaotic · @GWR
 
@@ -67,7 +67,7 @@ Always add `start_time` (UTC ISO), `sort_order`, and the fields: `post.fields=pu
 - `get_users_mentions <owner_user_id>` or `@<owner_handle> -from:<owner_handle> -is:retweet` · now-24h
 
 **Crossover (big non-crypto pages)**
-- `(from:NoContextHumans OR from:HumansNoContext OR from:nocontextfooty OR from:PopBase OR from:PopCrave OR from:Dexerto OR from:InternetH0F OR from:BleacherReport OR from:DiscussingFilm OR from:memechaotic OR from:GWR) has:images -is:retweet` · now-4h · recency (then now-8h)
+- `(from:<page1> OR from:<page2> OR ...) has:images -is:retweet` with this bot's `crossover_pages` · now-4h · recency (then now-8h). Full-list form, only if `crossover_pages` is missing: `(from:NoContextHumans OR from:HumansNoContext OR from:nocontextfooty OR from:PopBase OR from:PopCrave OR from:Dexerto OR from:InternetH0F OR from:BleacherReport OR from:DiscussingFilm OR from:memechaotic OR from:GWR) has:images -is:retweet`
 - Same with `has:media` · now-6h for video posts (check `media.type`, judge from `preview_image_url`)
 - Optional owner list: `list:<target_list_id> has:images -is:retweet` · now-8h, then now-4h
 

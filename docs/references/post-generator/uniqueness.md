@@ -66,4 +66,4 @@ Pass (QT official clip): "haters saying AI while the plush is pilling in 4k"
 
 ## Scenes already used (batch 001, do not reuse soon)
 
-Beanbag + coffee on a saturday; sofa at night with popcorn and blanket; pond-dock stool with an empty stool. Check `/home/box/shared/toad-drafts/` for newer batches.
+Beanbag + coffee on a saturday; sofa at night with popcorn and blanket; pond-dock stool with an empty stool. Check `/home/box/shared/toad-media/` for newer batches.

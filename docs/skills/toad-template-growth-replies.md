@@ -9,16 +9,16 @@ Popularize $TOAD by putting a useful, human reply from **the owner's X account**
 
 Siblings: `toad-template-post-generator` (original/QT timeline posts, image rules, publishing protocol), `toad-template-crossover-replies` (non-crypto image remixes under big pages), `toad-targets` (accounts, queries, don't-engage rules).
 
-The owner is a pond member, not the project. Official project: **@thetoadmeme_** only. Lookalike handles are not official (see `toad-targets`).
+The owner runs a fan account: a pond member, never the team or official. No reply may imply the owner is the team, a mod, support, or official. Official project: **@thetoadmeme_** only. Lookalike handles are not official (see `toad-targets`).
 
 ## Setup and tools
 
-Same as `toad-template-post-generator`: brand kit at `TOAD_KIT=/home/box/shared/toad-kit` (`$TOAD_KIT/kit/BRAND.md`, `$TOAD_KIT/kit/prompt-kit.md`, `$TOAD_KIT/kit/assets/characters/...`), config at `/home/box/shared/toad-config.json` (`owner_handle`, `owner_user_id`, `timezone`), drafts and queue in `/home/box/shared/toad-drafts/`, ledger via `python3 $TOAD_KIT/bin/toad_ledger.py --ledger /home/box/shared/toad-drafts/ledger.jsonl`.
+Same as `toad-template-post-generator`: brand kit at `TOAD_KIT=/home/box/shared/toad-kit` (`$TOAD_KIT/kit/BRAND.md`, `$TOAD_KIT/kit/prompt-kit.md`, `$TOAD_KIT/kit/assets/characters/...`), state in `TOAD_STATE_DIR=/home/box/shared/toad-state` (`toad-config.json` with `owner_handle`, `owner_user_id`, `timezone`; `queue.json`; the ledger via `python3 $TOAD_KIT/bin/toad_ledger.py`, which uses the state dir by default), media in `TOAD_MEDIA_DIR=/home/box/shared/toad-media`.
 
 - Reads: namespace `x` (`search_posts_all`, `get_users_by_username`, `get_users_posts`, `get_posts_by_id`, `get_posts_quoted_posts`, `get_users_mentions`). No connector can post.
-- Images: `python3 $TOAD_KIT/bin/xai_image.py --ref $TOAD_KIT/kit/assets/characters/toad-front-reference-fullbody.jpg --ref $TOAD_KIT/kit/assets/characters/toad-face-reference-circle.jpg [--ref ...] --prompt "..." --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD-name>.jpg`. Bills the owner's own xAI key; generate only when the reply needs it. Not the built-in GenerateImage.
+- Images: `python3 $TOAD_KIT/bin/xai_image.py --ref $TOAD_KIT/kit/assets/characters/toad-front-reference-fullbody.jpg --ref $TOAD_KIT/kit/assets/characters/toad-face-reference-circle.jpg [--ref ...] --prompt "..." --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD>/<name>.jpg`. Bills the owner's own xAI key; generate only when the reply needs it. Not the built-in GenerateImage.
 - Public X read gotchas: `start_time` not `within_time`; `has:images`/`has:media` not `filter:images`; `min_faves`/`min_replies` ignored (filter `public_metrics` yourself); follower counts need `user.fields=public_metrics`; reposts are `repost_count` not `retweet_count`; `get_users_posts` needs the numeric id (`from:<handle>` search works with a handle); list search is `list:<id> -is:retweet`; X search strips `$`. Full list in `toad-template-post-generator`.
-- Optional: `avoid-ai-writing` skill for an internal cleanup pass.
+- Optional: `avoid-ai-writing` skill for an internal cleanup pass. Deeper playbooks: `$TOAD_KIT/docs/references/growth-replies/` (adjacent-surfaces, reply-scoring, search-queries, soft-shill-rules, watchlist); this skill wins if they disagree.
 
 ## 1. Window
 
@@ -126,11 +126,11 @@ Copy-paste format: exact reply in a fenced `text` block, nothing else inside. UR
 ## Next scan watch
 ```
 
-Save each draft to `/home/box/shared/toad-drafts/<YYYY-MM-DD>/` and add it to the queue as `pending_approval`.
+Save each draft to `/home/box/shared/toad-media/<YYYY-MM-DD>/` and add it to the queue as `pending_approval`.
 
 ## 9. Safety
 
-- Soft-shill only. No coordinated-raid language, fake testimonials, impersonating official, or official-announcement framing.
+- Soft-shill only. No coordinated-raid language, fake testimonials, impersonating official, official-announcement framing, or implying the owner is the team or official (fan account).
 - No price predictions, pump talk, financial advice or promises. Never the CA unprompted.
 - **Never mention anyone's wallet or holdings**, including well-known supporters.
 - Never mean; never dunk on other coins or people. Don't engage trolls, scams, impersonators, or copycat contracts. No bulk tagging. No duplicates.

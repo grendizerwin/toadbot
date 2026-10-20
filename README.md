@@ -9,7 +9,7 @@ Not affiliated with or endorsed by the TOAD project. The official account is [@t
 New bots download the kit on first run into `TOAD_KIT=/home/box/shared/toad-kit`:
 
 ```bash
-git clone --depth 1 <REPO_URL> /home/box/shared/toad-kit      # or: git -C /home/box/shared/toad-kit pull
+git clone --depth 1 https://github.com/grendizerwin/toadbot.git /home/box/shared/toad-kit      # or: git -C /home/box/shared/toad-kit pull
 pip install --user -r /home/box/shared/toad-kit/requirements.txt   # Pillow
 ```
 

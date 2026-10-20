@@ -20,12 +20,13 @@ Shapes that worked (study the joke, don't copy the scene): a gadget "leak" graph
 
 ## Setup and tools
 
-Same as `toad-template-post-generator`: `TOAD_KIT=/home/box/shared/toad-kit`, config `/home/box/shared/toad-config.json` (`owner_handle`, `owner_user_id`, `timezone`, optional `target_list_id`), drafts/queue in `/home/box/shared/toad-drafts/`, ledger via `$TOAD_KIT/bin/toad_ledger.py --ledger /home/box/shared/toad-drafts/ledger.jsonl`.
+Same as `toad-template-post-generator`: `TOAD_KIT=/home/box/shared/toad-kit`, state in `TOAD_STATE_DIR=/home/box/shared/toad-state` (`toad-config.json` with `owner_handle`, `owner_user_id`, `timezone`, optional `target_list_id`, this bot's `crossover_pages` subset and `slot_offset_min`; `queue.json`; ledger via `python3 $TOAD_KIT/bin/toad_ledger.py`, state dir by default), media in `TOAD_MEDIA_DIR=/home/box/shared/toad-media`.
 
 - Reads: namespace `x`. Always request `post.fields=public_metrics,created_at,conversation_id`, `expansions=author_id,attachments.media_keys`, `media.fields=type,url,preview_image_url`, `user.fields=username,public_metrics` (follower counts only come with `public_metrics`).
 - View the parent: curl its media `url` (or a video's `preview_image_url`) to `/home/box/shared/toad-media/parents/` and Read it. Video can't be watched; say so.
-- Remix: `python3 $TOAD_KIT/bin/xai_image.py --ref <parent image> --ref $TOAD_KIT/kit/assets/characters/toad-front-reference-fullbody.jpg --ref $TOAD_KIT/kit/assets/characters/toad-face-reference-circle.jpg [--ref ...up to 5] --prompt "..." --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD-name>.jpg`. The parent is `<IMAGE_0>`. Bills the owner's own xAI key. Not the built-in GenerateImage.
+- Remix: `python3 $TOAD_KIT/bin/xai_image.py --ref <parent image> --ref $TOAD_KIT/kit/assets/characters/toad-front-reference-fullbody.jpg --ref $TOAD_KIT/kit/assets/characters/toad-face-reference-circle.jpg [--ref ...up to 5] --prompt "..." --n 1 --out /home/box/shared/toad-media/<YYYY-MM-DD>/<name>.jpg`. The parent is `<IMAGE_0>`. Bills the owner's own xAI key. Not the built-in GenerateImage.
 - Restore any parent text the generator garbles with Pillow afterward, using the brand fonts or a close match.
+- Deeper playbooks: `$TOAD_KIT/docs/references/crossover-replies/` (list-and-queries, remix-playbook, scoring); this skill wins if they disagree.
 - Read gotchas: `start_time` not `within_time`; `has:images` not `filter:images`; `min_faves` ignored; `repost_count` not `retweet_count`; `get_users_posts` needs a numeric id; list search `list:<id> -is:retweet`. Full list in `toad-template-post-generator`.
 
 ## 1. Window
@@ -45,7 +46,7 @@ Write 3–5 Continuity bullets naming the last crossover images so you don't red
 Queries are in `toad-targets` ("Crossover sources"). In order:
 
 1. The owner's optional target list, if set: `list:<target_list_id> has:images -is:retweet`, start_time now-8h, then now-4h, recency.
-2. The big non-crypto page query from `toad-targets`, start_time now-4h, recency.
+2. The big non-crypto page query from `toad-targets`, built **only from this bot's `crossover_pages` subset** in `toad-config.json` (a random ~60% of the toad-targets list, picked once at setup so bots running this template don't all pile under the same pages). start_time now-4h, recency. If `crossover_pages` is missing, use the full list and say so once.
 3. `has:media` variants for video posts only if the `preview_image_url` frame is remixable.
 4. Drop anything that is charts, tickers, listings, wallets, pads, CT jargon, or "JUST IN" token/exchange/ETF news, even from a mainstream page. Add `-crypto -bitcoin -btc -solana -memecoin` if a source is mostly crypto.
 
@@ -121,7 +122,7 @@ Never more than 3 crossover replies per window; image slop looks like a raid. If
 ## Next scan watch
 ```
 
-Save finals to `/home/box/shared/toad-drafts/<YYYY-MM-DD>/`, add to the queue as `pending_approval`. Remixes go stale fast: suggest posting right after approval, and set `due_at` no more than ~1 h out.
+Save finals to `/home/box/shared/toad-media/<YYYY-MM-DD>/`, add to the queue as `pending_approval`. Remixes go stale fast: suggest posting right after approval, and keep any suggested time no more than ~1 h out. Shift every suggested time by this bot's `slot_offset_min` (from `toad-config.json`) so template bots don't post on the same minute.
 
 ## Safety
 
